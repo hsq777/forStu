@@ -1,3 +1,8 @@
+/*
+ * @Author: hsq     779306
+ * @Description:
+ * @Date: 2022-09-14 19:51:47
+ */
 
 const students = [] // 学生信息，此处直接保存在内存中
 
@@ -39,7 +44,7 @@ module.exports = [
     url: '/hsq-admin/student/offline',
     type: 'post',
     response: config => {
-      debugger
+      // debugger
       const { id } = config.body
       const index = isIn(id)
       if (index > -1) {

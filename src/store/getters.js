@@ -1,3 +1,8 @@
+/*
+ * @Author: hsq     779306
+ * @Description:
+ * @Date: 2022-09-14 19:52:05
+ */
 const getters = {
   sidebar: state => state.app.sidebar,
   size: state => state.app.size,
@@ -10,6 +15,6 @@ const getters = {
   introduction: state => state.user.introduction,
   roles: state => state.user.roles,
   permission_routes: state => state.permission.routes,
-  students: state => state.student.student
+  students: state => state.classroom.student
 }
 export default getters

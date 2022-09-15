@@ -28,6 +28,7 @@
 <script>
 import ScrollPane from './ScrollPane'
 import path from 'path'
+import io from 'socket.io-client'
 
 export default {
   components: { ScrollPane },
@@ -37,7 +38,8 @@ export default {
       top: 0,
       left: 0,
       selectedTag: {},
-      affixTags: []
+      affixTags: [],
+      socket: io('ws://127.0.0.1:9526')
     }
   },
   computed: {
@@ -135,6 +137,15 @@ export default {
       })
     },
     closeSelectedTag(view) {
+      debugger
+      if (view.name === 'Student') {
+        const path = view.path
+        const id = path.substr(path.length - 1)
+        // 通知老师学生下线
+        this.socket.emit('logout', {
+          id
+        })
+      }
       this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
         if (this.isActive(view)) {
           this.toLastView(visitedViews, view)

@@ -1,3 +1,8 @@
+/*
+ * @Author: hsq     779306
+ * @Description:
+ * @Date: 2022-08-30 18:33:15
+ */
 const express = require('express')
 
 const app = express()
@@ -6,8 +11,8 @@ const io = require('socket.io')(server, { origins: '*:*' })
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
-// const port = 9527
-const version = '/1.0'
+const port = 9526
+// const version = '/1.0'
 const students = [] // 学生信息，此处直接保存在内存中
 
 // 判断该学生是否已存在
@@ -46,4 +51,6 @@ io.on('connection', (socket) => {
   })
 })
 
-server.listen(9527)
+server.listen(port, () => {
+  console.log(`app listening on port ${port}`)
+})

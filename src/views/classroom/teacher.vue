@@ -12,7 +12,7 @@
     </div>
     <div class="header">
       <div class="header-count">
-        <template v-if="students.length > 0">当前有{{ students.length }} 名学生连接</template>
+        <template v-if="studentList.length > 0">当前有{{ studentList.length }} 名学生连接</template>
         <template v-else>
           当前无学生连接
         </template>
@@ -26,7 +26,7 @@
 
 <script>
 
-import { mapGetters } from 'vuex'
+// import { mapGetters, mapState } from 'vuex'
 import io from 'socket.io-client'
 import { getStudentList } from '@/api/student'
 export default {
@@ -38,34 +38,42 @@ export default {
       y1: 0,
       isDraw: false,
       status: 'pen', // pen | eraser
-      socket: io('ws://127.0.0.1:9527')
-      // studentList: []
+      socket: io('ws://127.0.0.1:9526'),
+      studentList: []
     }
   },
   computed: {
-    ...mapGetters([
-      'students'
-    ])
+    // ...mapGetters([
+    //   'students'
+    // ]),
+    students() {
+      return this.$store.state.classroom.student
+    }
+    // ...mapState({
+    //   students: state => state.student.student
+    // })
   },
   mounted() {
     this.canvasNode = this.$refs.canvas
     this.canvasNode.width = 800
     this.canvasNode.height = 500
-    getStudentList()
+    this.getStudents()
     this.socket.on('refreshStu', () => {
-      debugger
+      // debugger
+      console.log('收到学生上/下线通知')
+      this.getStudents()
       // this.getStudents()
     })
   },
   methods: {
     // 获取学生列表
-    // async getStudents() {
-    //   await getStudentList().then(res => {
-    //     if (res.code === 20000) {
-    //       this.studentList = res.data
-    //     }
-    //   })
-    // },
+    async getStudents() {
+      await getStudentList().then(res => {
+        if (res.code === 20000) {
+          this.studentList = res.data
+        }
+      })
+    },
     handleMouseDown(e) {
       this.isDraw = true
       this.x1 = e.clientX - 215
@@ -113,7 +121,7 @@ export default {
       this.socket.emit('sendDraw', null)
       // 关闭页签
       // window.close()
-      this.$store.dispatch('tagsView/delView', this.$route)
+      this.$store.dispatch('student/delView', this.$route)
     }
   }
 }
