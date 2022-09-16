@@ -1,16 +1,23 @@
 <template>
   <div class="app-wrapper">
-    <app-main />
+    <section class="app-main">
+      <transition name="fade-transform" mode="out-in">
+        <keep-alive>
+          <router-view :key="key" />
+        </keep-alive>
+      </transition>
+    </section>
   </div>
 </template>
 
 <script>
-import { AppMain } from './components'
 
 export default {
   name: 'Layout',
-  components: {
-    AppMain
+  computed: {
+    key() {
+      return this.$route.path
+    }
   }
 }
 </script>
@@ -24,6 +31,12 @@ export default {
     position: relative;
     height: 100%;
     width: 100%;
+  }
+
+  .app-main {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
   }
 
 </style>
