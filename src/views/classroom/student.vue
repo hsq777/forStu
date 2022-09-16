@@ -18,7 +18,6 @@ export default {
     return {
       socket: io('ws://127.0.0.1:9526'),
       imgUrl: '',
-      tempRoute: {},
       curRoute: '',
       curId: '',
       students: []
@@ -26,8 +25,6 @@ export default {
   },
   created() {
     this.curId = this.$route.params && this.$route.params.id
-    this.tempRoute = Object.assign({}, this.$route)
-    this.setTagsViewTitle(this.curId)
   },
   mounted() {
     // debugger
@@ -80,13 +77,10 @@ export default {
       this.socket.emit('logout', {
         id: this.curId
       })
+      stuOffline({ id: this.curId })
+      window.close()
       // 关闭当前页签
-      this.$store.dispatch('tagsView/delView', this.curRoute)
-    },
-    setTagsViewTitle(id) {
-      const title = 'student'
-      this.curRoute = Object.assign({}, this.tempRoute, { title: `${title}-${id}` })
-      this.$store.dispatch('tagsView/updateVisitedView', this.curRoute)
+      // this.$store.dispatch('tagsView/delView', this.curRoute)
     }
   }
 }

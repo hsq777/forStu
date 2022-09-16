@@ -26,7 +26,6 @@
 
 <script>
 
-// import { mapGetters, mapState } from 'vuex'
 import io from 'socket.io-client'
 import { getStudentList } from '@/api/student'
 export default {
@@ -41,17 +40,6 @@ export default {
       socket: io('ws://127.0.0.1:9526'),
       studentList: []
     }
-  },
-  computed: {
-    // ...mapGetters([
-    //   'students'
-    // ]),
-    students() {
-      return this.$store.state.classroom.student
-    }
-    // ...mapState({
-    //   students: state => state.student.student
-    // })
   },
   mounted() {
     this.canvasNode = this.$refs.canvas
@@ -76,8 +64,8 @@ export default {
     },
     handleMouseDown(e) {
       this.isDraw = true
-      this.x1 = e.clientX - 215
-      this.y1 = e.clientY - 84
+      this.x1 = e.clientX
+      this.y1 = e.clientY
     },
     handleLeave() {
       this.isDraw = false
@@ -93,13 +81,13 @@ export default {
       const ctx = this.canvasNode.getContext('2d')
       ctx.beginPath()
       ctx.moveTo(this.x1, this.y1)
-      ctx.lineTo(e.clientX - 215, e.clientY - 84)
+      ctx.lineTo(e.clientX, e.clientY)
       ctx.strokeStyle = curColor
       ctx.lineWidth = 10
       ctx.stroke()
       ctx.closePath()
-      this.x1 = e.clientX - 215
-      this.y1 = e.clientY - 84
+      this.x1 = e.clientX
+      this.y1 = e.clientY
       // 发送画布数据
       this.socket.emit('sendDraw', this.canvasNode.toDataURL())
     },
@@ -112,16 +100,15 @@ export default {
     // 板擦
     handleEraser() {
       this.status = 'eraser'
-      this.x1 = 215
-      this.y1 = 84
+      this.x1 = 0
+      this.y1 = 0
     },
-    // 退出课堂
+    // 老师退出课堂
     handleQuit() {
     // 刷新学生端数据
       this.socket.emit('sendDraw', null)
       // 关闭页签
       // window.close()
-      this.$store.dispatch('student/delView', this.$route)
     }
   }
 }
